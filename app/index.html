@@ -1,37 +1,67 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>Web Site Testing</title>
-  </head>
-  <body>
-    <script>
-        var request = require("request");
-        var schedule = require('node-schedule');
-        var moment = require('moment-timezone');
-        var count = 0;
-        var y = schedule.scheduleJob('*/1 * * * * *', function(){
-            var nowDom = document.querySelector(".list .now");
-            nowDom.innerHTML = moment().tz("Asia/Taipei").format("h:mm:ss a");
-        });
+</head>
+<style media="screen">
+    .container {
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: row;
+    }
+    header {
+      -webkit-flex: 1;
+              flex: 1;
+    }
+    .content {
+      -webkit-flex: 1;
+              flex: 1;
+    }
+</style>
 
-        var j = schedule.scheduleJob('*/30 * * * * *', function(){
-            count += 1;
-            request('https://www.chung-yo.com', function (error, response, body) {
-                var list_success = document.querySelector(".list .success");
-                if (!error && response.statusCode == 200) {
-                    list_success.innerHTML = "網站目前正常！"+ count +" 狀態" + response.statusCode;
-                } else {
-                    list_success.innerHTML = "網站目前有異常 狀態" + response.statusCode;
-                }
-            })
-        });
+<body>
+    <script>
+        (function() {
+            var request = require("request");
+            var schedule = require('node-schedule');
+            var moment = require('moment-timezone');
+            var count = 0;
+            var y = schedule.scheduleJob('*/1 * * * * *', function() {
+                var nowDom = document.querySelector(".container .now");
+                nowDom.innerHTML = moment().tz("Asia/Taipei").format("h:mm:ss a");
+            });
+
+            var j = schedule.scheduleJob('*/30 * * * * *', function() {
+                count += 1;
+                request('https://www.chung-yo.com', function(error, response, body) {
+                    var list_success = document.querySelector(".container .success");
+                    if (!error && response.statusCode == 200) {
+                        list_success.innerHTML = "網站目前正常！" + count + " 狀態" + response.statusCode;
+                    } else {
+                        list_success.innerHTML = "網站目前有異常 狀態" + response.statusCode;
+                    }
+                })
+            });
+        })();
     </script>
-    <div class="list">
-        <h1 class="now"></h1>
-        <h3>Update Status during 30 second </h3>
-        <h1 class="success"></h1>
+    <div class="container">
+        <header>
+            <h1 class="title now"></h1>
+            <h3>Update Status during 30 second </h3>
+        </header>
+        <div class="content">
+            <div class="left">
+                <h3>成功訊息</h3>
+                <h3 class="success"></h3>
+            </div>
+            <div class="right">
+                <h3>失敗訊息</h3>
+            </div>
+        </div>
     </div>
 
-  </body>
+</body>
+
 </html>
