@@ -9,15 +9,31 @@
     .container {
         display: -webkit-flex;
         display: flex;
-        flex-direction: row;
+        -webkit-flex-flow: row wrap;
+        flex-flow: row wrap;
     }
+
+    .wrapper > * {
+      padding: 10px;
+      flex: 1 100%;
+    }
+
     header {
       -webkit-flex: 1;
               flex: 1;
     }
+
     .content {
       -webkit-flex: 1;
               flex: 1;
+    }
+
+    .right {
+      flex: 1 auto;
+    }
+
+    .left {
+      flex: 1 auto;
     }
 </style>
 
@@ -27,38 +43,39 @@
             var request = require("request");
             var schedule = require('node-schedule');
             var moment = require('moment-timezone');
+            var childProcess = require('child_process');
+            var fs = require('fs')
+            var path = require('path')
+            var phantomjs = require('phantomjs');
+
+            var childArgs = [
+               path.join(__dirname, 'capture.js'),
+               'https://www.chung-yo.com'
+             ]
+
+             childProcess.execFile(phantomjs.path, childArgs, function (err, stdout, stderr) {
+               console.log(stdout);
+             })
+
             var count = 0;
+            var time = 30;
             var y = schedule.scheduleJob('*/1 * * * * *', function() {
                 var nowDom = document.querySelector(".container .now");
                 nowDom.innerHTML = moment().tz("Asia/Taipei").format("h:mm:ss a");
             });
 
-            var j = schedule.scheduleJob('*/30 * * * * *', function() {
+            var j = schedule.scheduleJob('*/'+time+' * * * * *', function() {
                 count += 1;
-                request('https://www.chung-yo.com', function(error, response, body) {
-                    var list_success = document.querySelector(".container .success");
-                    if (!error && response.statusCode == 200) {
-                        list_success.innerHTML = "網站目前正常！" + count + " 狀態" + response.statusCode;
-                    } else {
-                        list_success.innerHTML = "網站目前有異常 狀態" + response.statusCode;
-                    }
-                })
             });
         })();
     </script>
-    <div class="container">
+    <div class="container wrapper">
         <header>
-            <h1 class="title now"></h1>
-            <h3>Update Status during 30 second </h3>
+            <h3 class="title now"></3>
+            <h5>Update Status during 30 second </h5>
         </header>
-        <div class="content">
-            <div class="left">
-                <h3>成功訊息</h3>
-                <h3 class="success"></h3>
-            </div>
-            <div class="right">
-                <h3>失敗訊息</h3>
-            </div>
+        <div>
+          
         </div>
     </div>
 
