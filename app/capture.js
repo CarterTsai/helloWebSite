@@ -10,7 +10,8 @@ if (system.args.length === 1) {
 
 t = Date.now()
 address = system.args[1]
+filename = system.args[2]
 page.open(address, function (status) {
-  page.render('chung.png');
+  page.render('./img/'+filename);
   phantom.exit()
 })

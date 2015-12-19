@@ -29,7 +29,9 @@
     }
 
     .right {
-      flex: 1 auto;
+      flex: 1 300px;
+      width: 100px;  /* Or whatever */
+height: 100px; /* Or whatever */
     }
 
     .left {
@@ -39,6 +41,18 @@
 
 <body>
     <script>
+        // gloab variable
+         var time = 59;
+    </script>
+    <script>
+    $ = require('./script/jquery-2.1.4.min.js');
+    $(document).ready(function(){
+        $(".times").text(time);
+    });
+    </script>
+    <script>
+
+
         (function() {
             var request = require("request");
             var schedule = require('node-schedule');
@@ -47,10 +61,13 @@
             var fs = require('fs')
             var path = require('path')
             var phantomjs = require('phantomjs');
+            var jQuery = require('jquery');
+            var $ = jQuery;
 
             var childArgs = [
                path.join(__dirname, 'capture.js'),
-               'https://www.chung-yo.com'
+               'https://www.chung-yo.com',
+               'chung.png'
              ]
 
              childProcess.execFile(phantomjs.path, childArgs, function (err, stdout, stderr) {
@@ -58,13 +75,14 @@
              })
 
             var count = 0;
-            var time = 30;
-            var y = schedule.scheduleJob('*/1 * * * * *', function() {
+            var y = schedule.scheduleJob('*/11 * * * * *', function() {
                 var nowDom = document.querySelector(".container .now");
                 nowDom.innerHTML = moment().tz("Asia/Taipei").format("h:mm:ss a");
+
             });
 
             var j = schedule.scheduleJob('*/'+time+' * * * * *', function() {
+                console.log(time);
                 count += 1;
             });
         })();
@@ -72,11 +90,42 @@
     <div class="container wrapper">
         <header>
             <h3 class="title now"></3>
-            <h5>Update Status during 30 second </h5>
+            <h5>Update Status during <span class="times"></span>second </h5>
+            <label>Url</label>
+            <input placeholder="Url"/>
+            <label for="">Name</label>
+            <input placeholder="Name">
+            <button type="button">新增</button>
         </header>
-        <div>
-          
+        <div class="right">
+            1
         </div>
+        <div class="right">
+            1
+        </div>
+        <div class="right">
+            1
+        </div>
+
+        <div class="right">
+            1
+        </div>
+        <div class="right">
+            1
+        </div>
+        <div class="right">
+            1
+        </div>
+        <div class="right">
+            1
+        </div>
+        <div class="right">
+            1
+        </div>
+        <div class="right">
+            1
+        </div>
+
     </div>
 
 </body>
