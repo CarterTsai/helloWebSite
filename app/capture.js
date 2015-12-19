@@ -28,5 +28,5 @@ page.open(address, function (status) {
     }
     console.log(JSON.stringify(datas));
     page.close();
-    phantom.exit()
+    phantom.exit();
 })
