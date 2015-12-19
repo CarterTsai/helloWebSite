@@ -19,12 +19,18 @@ page.open(address, function (status) {
         loadTiming = Date.now() - t;
     }
     page.render('./img/'+filename);
+
+    var machine = page.evaluate(function() {
+       return document.querySelector('.panel-body > p > span').innerHTML;
+    });
+
     var datas = {
       'index': index,
       'url': address,
       'imageName': filename,
       'name': name,
-      'times': loadTiming
+      'times': loadTiming,
+      'machine': machine
     }
     console.log(JSON.stringify(datas));
     page.close();

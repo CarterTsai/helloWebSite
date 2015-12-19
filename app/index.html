@@ -46,7 +46,7 @@
 <body>
     <script>
             // gloab variable
-            var time = 60;
+            var time = 1;
             $ = require('./script/jquery-2.1.4.min.js');
             $(document).ready(function(){
                 $(".times").text(time);
@@ -63,7 +63,7 @@
             var datas = require('./script/datas.js');
             var $ = jQuery;
             var count = 0;
-            var scheduleTime = '*/'+time+' * * * * *';
+            var scheduleTime = '0 */'+time+' * * * *'
 
             var j = cron.scheduleJob(scheduleTime, function() {
                 var i = 0;
@@ -85,7 +85,7 @@
                        console.log(box.length);
                        if(box.length < 1) {
                            content.append("<div class='box' id='box-"+ result.index +"'><label>"+
-                                            result.name + " - " + result.times + " msec"
+                                            result.name + " - " + result.times + " msec - machine "+result.machine
                                           +"</label>"+
                                             "<div class='imgBox'>"+
                                                 "<img src='./img/"+result.imageName+"'></img>"+
@@ -96,7 +96,7 @@
                             var box = $("#box-"+result.index);
                             var selectBox = box[0];
                             console.log($(selectBox).children("div").children("img"));
-                            $(selectBox).children("div").children("label").text(result.name + " - " + result.times + " msec");
+                            $(selectBox).children("div").children("label").text(result.name + " - " + result.times + " msec - machine "+ result.machine);
                             $(selectBox).children("div").children("img").remove();
                             $(selectBox).children("div").append("<img src='./img/"+result.imageName+"?"+Math.random()+"'></img>");
                         }
@@ -106,7 +106,7 @@
     </script>
     <div class="container wrapper">
         <header>
-            <span><span class="times"></span> sec Update -- </span>
+            <span><span class="times"></span> minus Update -- </span>
             <span class="title now"></span>
         </header>
         <div class="content"></div>
