@@ -7,9 +7,7 @@
 </head>
 <style media="screen">
     .container {
-        display: -webkit-flex;
         display: flex;
-        -webkit-flex-flow: row wrap;
         flex-flow: row wrap;
     }
 
@@ -19,73 +17,83 @@
     }
 
     header {
-      -webkit-flex: 1;
-              flex: 1;
+        flex: 1;
     }
 
     .content {
-      -webkit-flex: 1;
-              flex: 1;
+        flex: 1;
+        flex-flow: row wrap;
     }
 
-    .right {
-      flex: 1 300px;
-      width: 100px;  /* Or whatever */
-height: 100px; /* Or whatever */
+    .box {
+      flex: 1 100%;
+      width: 400px;  /* Or whatever */
+      height: 400px; /* Or whatever */
+      margin-bottom: 50px;
+      margin-left: 10px;
+      overflow: scroll;
+      float: left;
     }
 
-    .left {
-      flex: 1 auto;
+    .imgBox {
+        overflow: scroll;
     }
+
 </style>
 
 <body>
     <script>
-        // gloab variable
-         var time = 59;
-    </script>
-    <script>
-    $ = require('./script/jquery-2.1.4.min.js');
-    $(document).ready(function(){
-        $(".times").text(time);
-    });
-    </script>
-    <script>
+            // gloab variable
+            var time = 20;
+            $ = require('./script/jquery-2.1.4.min.js');
+            $(document).ready(function(){
+                $(".times").text(time);
+            });
 
-
-        (function() {
             var request = require("request");
-            var schedule = require('node-schedule');
+            var cron = require('node-schedule');
             var moment = require('moment-timezone');
             var childProcess = require('child_process');
             var fs = require('fs')
             var path = require('path')
             var phantomjs = require('phantomjs');
             var jQuery = require('jquery');
+            var datas = require('./script/datas.js');
             var $ = jQuery;
-
-            var childArgs = [
-               path.join(__dirname, 'capture.js'),
-               'https://www.chung-yo.com',
-               'chung.png'
-             ]
-
-             childProcess.execFile(phantomjs.path, childArgs, function (err, stdout, stderr) {
-               console.log(stdout);
-             })
-
             var count = 0;
-            var y = schedule.scheduleJob('*/11 * * * * *', function() {
-                var nowDom = document.querySelector(".container .now");
-                nowDom.innerHTML = moment().tz("Asia/Taipei").format("h:mm:ss a");
+            var scheduleTime = +time+' * * * * *';
 
-            });
+            var j = cron.scheduleJob(scheduleTime, function() {
+                var i = 0;
+                for (var i = 0; i < datas.length; i++) {
+                    var childArgs = [
+                       path.join(__dirname, 'capture.js'),
+                       datas[i].url,
+                       datas[i].imageName,
+                       datas[i].name,
+                       i
+                     ]
 
-            var j = schedule.scheduleJob('*/'+time+' * * * * *', function() {
-                console.log(time);
-                count += 1;
+                    childProcess.execFile(phantomjs.path, childArgs, function (err, stdout, stderr) {
+                       var result = JSON.parse(stdout);
+                       var content = $(".content");
+                       var box = $("#box-"+result.index);
+                       if(box.length < 1) {
+                           content.append("<div class='box' id='box-"+ result.index +"'><label>"+
+                                            result.name
+                                          +"</label>"+
+                                            "<div class='imgBox'>"+
+                                                "<img src='./img/"+result.imageName+"'></img>"+
+                                            "</div>" +
+                                          "</div>");
+                        } else {
+                            var selectBox = box[0];
+                            $(selectBox).children("label").text(result.name);
+                            $(selectBox).children("div").children("img").attr("src", './img/'+result.imageName);
+                        }
+                    });
+                }
             });
-        })();
     </script>
     <div class="container wrapper">
         <header>
@@ -97,35 +105,7 @@ height: 100px; /* Or whatever */
             <input placeholder="Name">
             <button type="button">新增</button>
         </header>
-        <div class="right">
-            1
-        </div>
-        <div class="right">
-            1
-        </div>
-        <div class="right">
-            1
-        </div>
-
-        <div class="right">
-            1
-        </div>
-        <div class="right">
-            1
-        </div>
-        <div class="right">
-            1
-        </div>
-        <div class="right">
-            1
-        </div>
-        <div class="right">
-            1
-        </div>
-        <div class="right">
-            1
-        </div>
-
+        <div class="content"></div>
     </div>
 
 </body>

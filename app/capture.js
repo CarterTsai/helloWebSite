@@ -9,9 +9,19 @@ if (system.args.length === 1) {
 }
 
 t = Date.now()
-address = system.args[1]
-filename = system.args[2]
+address = system.args[1];
+filename = system.args[2];
+name = system.args[3];
+index = system.args[4];
 page.open(address, function (status) {
   page.render('./img/'+filename);
+  var datas = {
+      'index': index,
+      'url': address,
+      'imageName': filename,
+      'name': name
+  }
+  console.log(JSON.stringify(datas));
+  page.close();
   phantom.exit()
 })
