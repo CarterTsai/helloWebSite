@@ -88,7 +88,7 @@
                                             result.name + " - " + result.times + " msec - machine "+result.machine
                                           +"</label>"+
                                             "<div class='imgBox'>"+
-                                                "<img src='./img/"+result.imageName+"'></img>"+
+                                                "<img src='img/"+result.imageName+"'></img>"+
                                             "</div>" +
                                           "</div>");
                         } else {
@@ -98,7 +98,7 @@
                             console.log($(selectBox).children("div").children("img"));
                             $(selectBox).children("div").children("label").text(result.name + " - " + result.times + " msec - machine "+ result.machine);
                             $(selectBox).children("div").children("img").remove();
-                            $(selectBox).children("div").append("<img src='./img/"+result.imageName+"?"+Math.random()+"'></img>");
+                            $(selectBox).children("div").append("<img src='img/"+result.imageName+"?"+Math.random()+"'></img>");
                         }
                     });
                 }
